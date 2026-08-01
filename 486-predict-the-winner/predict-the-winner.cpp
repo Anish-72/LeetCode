@@ -1,16 +1,18 @@
 class Solution {
 public:
     bool predictTheWinner(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> dp(nums.begin(), nums.end());
-        
-        for (int len = 2; len <= n; ++len) {
-            for (int i = 0; i <= n - len; ++i) {
-                int j = i + len - 1;
-                dp[i] = max(nums[i] - dp[i + 1], nums[j] - dp[i]);
-            }
+        return helperFn(nums, 0, nums.size() - 1) >= 0;
+    }
+
+private:
+    int helperFn(const vector<int>& nums, int left, int right) {
+        if (left == right) {
+            return nums[left];
         }
         
-        return dp[0] >= 0;
+        int pickLeft = nums[left] - helperFn(nums, left + 1, right);
+        int pickRight = nums[right] - helperFn(nums, left, right - 1);
+        
+        return max(pickLeft, pickRight);
     }
 };
