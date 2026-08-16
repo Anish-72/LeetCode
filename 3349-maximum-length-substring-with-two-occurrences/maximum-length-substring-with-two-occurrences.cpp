@@ -1,19 +1,30 @@
 class Solution {
 public:
     int maximumLengthSubstring(string s) {
-        int max_len = 0;
+        unordered_map<char,int> map;
         int left = 0;
-        vector<int> count(26, 0);
-        
-        for (int right = 0; right < s.length(); ++right) {
-            count[s[right] - 'a']++;
-            while (count[s[right] - 'a'] > 2) {
-                count[s[left] - 'a']--;
-                left++;
+        int right = 0;
+        int count = 0;
+        int maxCount = INT_MIN;
+
+        while(right < s.length()){
+            if(!map[s[right]]){
+                map[s[right]] = 1;
+                count++;
+                maxCount = max(maxCount, count);
+            }else{
+                map[s[right]]++;
+                count++;
+                while(map[s[right]] > 2){
+                    map[s[left]]--;
+                    left++;
+                    count--;
+                }
+                maxCount = max(maxCount, count);
             }
-            max_len = max(max_len, right - left + 1);
+            right++;
         }
-        
-        return max_len;
+        return maxCount;
+
     }
 };
