@@ -1,36 +1,41 @@
 class Solution {
-public:
-    vector<vector<string>> partition(string s) {
-        vector<vector<string>> res;
-        vector<string> path;
-        backtrack(0, s, path, res);
-        return res;
-    }
-
 private:
-    void backtrack(int start, const string& s, vector<string>& path, vector<vector<string>>& res) {
-        if (start == s.length()) {
-            res.push_back(path);
-            return;
-        }
-
-        for (int end = start; end < s.length(); ++end) {
-            if (isPalindrome(s, start, end)) {
-                path.push_back(s.substr(start, end - start + 1));
-                backtrack(end + 1, s, path, res);
-                path.pop_back();
-            }
-        }
-    }
-
-    bool isPalindrome(const string& s, int left, int right) {
+    bool isPalindrome(string part) {
+        int left = 0;
+        int right = part.size()-1;
         while (left < right) {
-            if (s[left] != s[right]) {
+            if (part[left] != part[right]) {
                 return false;
             }
             left++;
             right--;
         }
         return true;
+    }
+    void helper(string s,vector<vector<string>> &result, vector<string> &ans){
+        if(!s.size()){
+            result.push_back(ans);
+            return;
+        }
+        for(int i = 0; i<s.size(); i++){
+            string part = s.substr(0, i+1);
+
+            if(isPalindrome(part)){
+                ans.push_back(part);
+                helper(s.substr(i+1),result, ans);
+                ans.pop_back();
+            }
+        }
+        return;
+    }
+public:
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> result;
+
+        vector<string> part;
+
+        helper(s, result, part);
+
+        return result;
     }
 };
